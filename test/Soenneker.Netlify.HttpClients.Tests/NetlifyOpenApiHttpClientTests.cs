@@ -1,20 +1,19 @@
 using Soenneker.Netlify.HttpClients.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Netlify.HttpClients.Tests;
 
-[Collection("Collection")]
-public sealed class NetlifyOpenApiHttpClientTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public sealed class NetlifyOpenApiHttpClientTests : HostedUnitTest
 {
     private readonly INetlifyOpenApiHttpClient _httpclient;
 
-    public NetlifyOpenApiHttpClientTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public NetlifyOpenApiHttpClientTests(Host host) : base(host)
     {
         _httpclient = Resolve<INetlifyOpenApiHttpClient>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
