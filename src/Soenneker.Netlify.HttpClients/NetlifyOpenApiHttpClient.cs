@@ -11,11 +11,11 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.Netlify.HttpClients;
 
-///<inheritdoc cref="INetlifyOpenApiHttpClient"/>
 public sealed class NetlifyOpenApiHttpClient : INetlifyOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
     private readonly IConfiguration _config;
+    private readonly string _clientId = $"{nameof(NetlifyOpenApiHttpClient)}:{Guid.NewGuid():N}";
 
     private const string _prodBaseUrl = "https://api.netlify.com/api/v1";
 
@@ -27,7 +27,7 @@ public sealed class NetlifyOpenApiHttpClient : INetlifyOpenApiHttpClient
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(nameof(NetlifyOpenApiHttpClient), (config: _config, baseUrl: _config["Netlify:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
+        return _httpClientCache.Get(_clientId, (config: _config, baseUrl: _config["Netlify:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
         {
             var apiKey = state.config.GetValueStrict<string>("Netlify:ApiKey");
             string authHeaderName = state.config["Netlify:AuthHeaderName"] ?? "Authorization";
@@ -45,20 +45,13 @@ public sealed class NetlifyOpenApiHttpClient : INetlifyOpenApiHttpClient
         }, cancellationToken);
     }
 
-    /// <summary>
-    /// Releases resources used by the current instance.
-    /// </summary>
     public void Dispose()
     {
-        _httpClientCache.RemoveSync(nameof(NetlifyOpenApiHttpClient));
+        _httpClientCache.RemoveSync(_clientId);
     }
 
-    /// <summary>
-    /// Asynchronously releases resources used by the current instance.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
-        return _httpClientCache.Remove(nameof(NetlifyOpenApiHttpClient));
+        return _httpClientCache.Remove(_clientId);
     }
 }

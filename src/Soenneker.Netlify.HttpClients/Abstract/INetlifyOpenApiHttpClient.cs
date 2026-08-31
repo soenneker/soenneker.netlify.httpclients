@@ -6,14 +6,14 @@ using System.Threading;
 namespace Soenneker.Netlify.HttpClients.Abstract;
 
 /// <summary>
-/// A .NET thread-safe singleton HttpClient for 
+/// Provides a cached, authenticated HTTP client for the Netlify API.
 /// </summary>
-public interface INetlifyOpenApiHttpClient: IDisposable, IAsyncDisposable
+public interface INetlifyOpenApiHttpClient : IDisposable, IAsyncDisposable
 {
     /// <summary>
-    /// Gets the value.
+    /// Gets the configured Netlify HTTP client.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task containing the result of the operation.</returns>
+    /// <returns>The cached client.</returns>
     ValueTask<HttpClient> Get(CancellationToken cancellationToken = default);
 }
