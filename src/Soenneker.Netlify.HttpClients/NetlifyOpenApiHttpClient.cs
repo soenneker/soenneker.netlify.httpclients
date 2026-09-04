@@ -11,6 +11,7 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.Netlify.HttpClients;
 
+/// <inheritdoc cref="INetlifyOpenApiHttpClient" />
 public sealed class NetlifyOpenApiHttpClient : INetlifyOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
