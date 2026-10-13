@@ -30,7 +30,7 @@ public sealed class NetlifyOpenApiHttpClient : INetlifyOpenApiHttpClient
     {
         return _httpClientCache.Get(_clientId, (config: _config, baseUrl: _config["Netlify:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
         {
-            var apiKey = state.config.GetValueStrict<string>("Netlify:ApiKey");
+            var apiKey = state.config.GetStringStrict("Netlify:ApiKey");
             string authHeaderName = state.config["Netlify:AuthHeaderName"] ?? "Authorization";
             string authHeaderValueTemplate = state.config["Netlify:AuthHeaderValueTemplate"] ?? "Bearer {token}";
             string authHeaderValue = authHeaderValueTemplate.Replace("{token}", apiKey, StringComparison.Ordinal);
